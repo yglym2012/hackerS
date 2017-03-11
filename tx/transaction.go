@@ -309,7 +309,7 @@ func addAsset(InitValue string, variationalValue string ) (string){
 	num1,_ := strconv.ParseFloat(str1,32)
 	num2,_ := strconv.ParseFloat(str2,32)
 
-	finalNum := num1 + x
+	finalNum := num1 + num2
 	
 	finalValue := strconv.FormatFloat(finalNum, 'f', 2, 32)
 
