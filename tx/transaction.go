@@ -212,22 +212,22 @@ func (t *SimpleChaincode) exchange(stub shim.ChaincodeStubInterface, args []stri
 	}
 
 	//卖方资产转移
-	if strings.EqualFold(sellAssetType.GOLD) {
+	if strings.EqualFold(sellAssetType,sellerInfo.GOLD) {
 		sellerInfo.GOLD,payerInfo.GOLD = typeExchangeAndCount(sellerInfo.GOLD,payerInfo.GOLD,sellAssetNum)
-	} else if strings.EqualFold(sellAssetType.CNY) {
+	} else if strings.EqualFold(sellAssetType,sellerInfo.CNY) {
 		sellerInfo.CNY,payerInfo.CNY = typeExchangeAndCount(sellerInfo.CNY,payerInfo.CNY,sellAssetNum)
-	} else if strings.EqualFold(sellAssetType.BTC) {
+	} else if strings.EqualFold(sellAssetType,sellerInfo.BTC) {
 		sellerInfo.BTC,payerInfo.BTC = typeExchangeAndCount(sellerInfo.BTC,payerInfo.BTC,sellAssetNum)
 	} else {
 		return nil, errors.New("No such assetType")
 	}
 
 	//买方资产转移
-	if strings.EqualFold(payAssetType.GOLD) {
+	if strings.EqualFold(payAssetType,payerInfo.GOLD) {
 		payerInfo.GOLD,sellerInfo.GOLD = typeExchangeAndCount(payerInfo.GOLD,sellerInfo.GOLD,payAssetNum)
-	} else if strings.EqualFold(payAssetType.CNY) {
+	} else if strings.EqualFold(payAssetType,payerInfo.CNY) {
 		payerInfo.CNY,sellerInfo.CNY = typeExchangeAndCount(payerInfo.CNY,sellerInfo.CNY,payAssetNum)
-	} else if strings.EqualFold(payAssetType.BTC) {
+	} else if strings.EqualFold(payAssetType,payerInfo.BTC) {
 		payerInfo.BTC,sellerInfo.BTC = typeExchangeAndCount(payerInfo.BTC,sellerInfo.BTC,payAssetNum)
 	} else {
 		return nil, errors.New("No such assetType")
