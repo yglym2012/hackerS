@@ -22,9 +22,9 @@ package main
 import (
 	"errors"
 	"fmt"
-	"strings"
-	"strconv"
-	"encoding/json"
+	//"strings"
+	//"strconv"
+	//"encoding/json"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
