@@ -94,7 +94,6 @@ func (t *SimpleChaincode) recharge(stub shim.ChaincodeStubInterface, args []stri
 	var rechargeNum string	//充值数量
 
 	var userInfo userInfoStruct 	//用户账户信息结构体
-	var tmpuserInfo userInfoStruct 	//用户账户信息临时结构体
 	var GOLD string 	//黄金
 	var CNY string 	//人民币
 	var BTC string 	//比特币
