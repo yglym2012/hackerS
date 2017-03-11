@@ -122,14 +122,13 @@ func (t *SimpleChaincode) recharge(stub shim.ChaincodeStubInterface, args []stri
     	fmt.Println("error:", err)  
 	}
 
-	//将充值的数量写入相应资产的余额中
-	//！！！！！！！！！！有机会换一个简单的写法
+	//将充值的数量写入相加相应资产的余额中
 	if strings.EqualFold(assetType,"GOLD") {
-		userInfo.GOLD = rechargeNum
+		userInfo.GOLD = addAsset(userInfo.GOLD,rechargeNum)
 	} else if strings.EqualFold(assetType,"CNY") {
-		userInfo.CNY = rechargeNum
+		userInfo.CNY = addAsset(userInfo.CNY,rechargeNum)
 	} else if strings.EqualFold(assetType,"BTC") {
-		userInfo.BTC = rechargeNum
+		userInfo.BTC = addAsset(userInfo.BTC,rechargeNum)
 	} else {
 		return nil, errors.New("No such assetType")
 	}
@@ -293,17 +292,28 @@ func typeExchangeAndCount(sellerInit string , payerInit string , variationalValu
 	num2,_ := strconv.ParseFloat(str2,32)
 	x,_ := strconv.ParseFloat(str3,32)
 
-	finalSeller := num1 + x
-	finalPayer := num2 - x
+	finalSeller := num1 - x
+	finalPayer := num2 + x
 	
 
 	finalSellerStr := strconv.FormatFloat(finalSeller, 'f', 2, 32)
 	finalPayerStr := strconv.FormatFloat(finalPayer, 'f', 2, 32)
 
-	fmt.Println(finalSellerStr)
-	fmt.Println(finalPayerStr)
-
 	return finalSellerStr , finalPayerStr
+}
+
+func addAsset(InitValue string, variationalValue string ) (string){
+	str1 := InitValue
+	str2 := variationalValue
+
+	num1,_ := strconv.ParseFloat(str1,32)
+	num2,_ := strconv.ParseFloat(str2,32)
+
+	finalNum := num1 + x
+	
+	finalValue := strconv.FormatFloat(finalNum, 'f', 2, 32)
+
+	return finalValue
 
 }
 
