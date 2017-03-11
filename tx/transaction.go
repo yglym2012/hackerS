@@ -94,9 +94,6 @@ func (t *SimpleChaincode) recharge(stub shim.ChaincodeStubInterface, args []stri
 	var rechargeNum string	//充值数量
 
 	var userInfo userInfoStruct 	//用户账户信息结构体
-	var GOLD string 	//黄金
-	var CNY string 	//人民币
-	var BTC string 	//比特币
 	var userInfoByte []byte 	//接收用户账户信息（byte格式）
 	var newUserInfoByte []byte 	//接收更新后的用户账户信息结果（byte格式）
 
@@ -127,11 +124,11 @@ func (t *SimpleChaincode) recharge(stub shim.ChaincodeStubInterface, args []stri
 
 	//将充值的数量写入相应资产的余额中
 	//！！！！！！！！！！有机会换一个简单的写法
-	if strings.EqualFold(assetType,GOLD) {
+	if strings.EqualFold(assetType,"GOLD") {
 		userInfo.GOLD = rechargeNum
-	} else if strings.EqualFold(assetType,CNY) {
+	} else if strings.EqualFold(assetType,"CNY") {
 		userInfo.CNY = rechargeNum
-	} else if strings.EqualFold(assetType,BTC) {
+	} else if strings.EqualFold(assetType,"BTC") {
 		userInfo.BTC = rechargeNum
 	} else {
 		return nil, errors.New("No such assetType")
@@ -211,22 +208,22 @@ func (t *SimpleChaincode) exchange(stub shim.ChaincodeStubInterface, args []stri
 	}
 
 	//卖方资产转移
-	if strings.EqualFold(sellAssetType,sellerInfo.GOLD) {
+	if strings.EqualFold(sellAssetType,"GOLD") {
 		sellerInfo.GOLD,payerInfo.GOLD = typeExchangeAndCount(sellerInfo.GOLD,payerInfo.GOLD,sellAssetNum)
-	} else if strings.EqualFold(sellAssetType,sellerInfo.CNY) {
+	} else if strings.EqualFold(sellAssetType,"CNY") {
 		sellerInfo.CNY,payerInfo.CNY = typeExchangeAndCount(sellerInfo.CNY,payerInfo.CNY,sellAssetNum)
-	} else if strings.EqualFold(sellAssetType,sellerInfo.BTC) {
+	} else if strings.EqualFold(sellAssetType,"BTC") {
 		sellerInfo.BTC,payerInfo.BTC = typeExchangeAndCount(sellerInfo.BTC,payerInfo.BTC,sellAssetNum)
 	} else {
 		return nil, errors.New("No such assetType")
 	}
 
 	//买方资产转移
-	if strings.EqualFold(payAssetType,payerInfo.GOLD) {
+	if strings.EqualFold(payAssetType,"GOLD") {
 		payerInfo.GOLD,sellerInfo.GOLD = typeExchangeAndCount(payerInfo.GOLD,sellerInfo.GOLD,payAssetNum)
-	} else if strings.EqualFold(payAssetType,payerInfo.CNY) {
+	} else if strings.EqualFold(payAssetType,"CNY") {
 		payerInfo.CNY,sellerInfo.CNY = typeExchangeAndCount(payerInfo.CNY,sellerInfo.CNY,payAssetNum)
-	} else if strings.EqualFold(payAssetType,payerInfo.BTC) {
+	} else if strings.EqualFold(payAssetType,"BTC") {
 		payerInfo.BTC,sellerInfo.BTC = typeExchangeAndCount(payerInfo.BTC,sellerInfo.BTC,payAssetNum)
 	} else {
 		return nil, errors.New("No such assetType")
