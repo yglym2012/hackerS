@@ -140,7 +140,7 @@ func (t *SimpleChaincode) recharge(stub shim.ChaincodeStubInterface, args []stri
 
 	//用户账户信息变更完毕，将用户账户信息重新存进区块链中
 	//将struct类型转换成bytes[]
-	newUserInfoByte, err = json.Marshal(tmpDraftInfo)  
+	newUserInfoByte, err = json.Marshal(userInfo)  
 	if err != nil {  
 		return nil, errors.New("Can not translate struct to byte")
 	}
@@ -212,22 +212,22 @@ func (t *SimpleChaincode) exchange(stub shim.ChaincodeStubInterface, args []stri
 	}
 
 	//卖方资产转移
-	if strings.EqualFold(sellAssetType,GOLD) {
+	if strings.EqualFold(sellAssetType.GOLD) {
 		sellerInfo.GOLD,payerInfo.GOLD = typeExchangeAndCount(sellerInfo.GOLD,payerInfo.GOLD,sellAssetNum)
-	} else if strings.EqualFold(sellAssetType,CNY) {
+	} else if strings.EqualFold(sellAssetType.CNY) {
 		sellerInfo.CNY,payerInfo.CNY = typeExchangeAndCount(sellerInfo.CNY,payerInfo.CNY,sellAssetNum)
-	} else if strings.EqualFold(sellAssetType,BTC) {
+	} else if strings.EqualFold(sellAssetType.BTC) {
 		sellerInfo.BTC,payerInfo.BTC = typeExchangeAndCount(sellerInfo.BTC,payerInfo.BTC,sellAssetNum)
 	} else {
 		return nil, errors.New("No such assetType")
 	}
 
 	//买方资产转移
-	if strings.EqualFold(payAssetType,GOLD) {
+	if strings.EqualFold(payAssetType.GOLD) {
 		payerInfo.GOLD,sellerInfo.GOLD = typeExchangeAndCount(payerInfo.GOLD,sellerInfo.GOLD,payAssetNum)
-	} else if strings.EqualFold(payAssetType,CNY) {
+	} else if strings.EqualFold(payAssetType.CNY) {
 		payerInfo.CNY,sellerInfo.CNY = typeExchangeAndCount(payerInfo.CNY,sellerInfo.CNY,payAssetNum)
-	} else if strings.EqualFold(payAssetType,BTC) {
+	} else if strings.EqualFold(payAssetType.BTC) {
 		payerInfo.BTC,sellerInfo.BTC = typeExchangeAndCount(payerInfo.BTC,sellerInfo.BTC,payAssetNum)
 	} else {
 		return nil, errors.New("No such assetType")
