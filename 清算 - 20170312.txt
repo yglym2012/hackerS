@@ -1,0 +1,104 @@
+清算 智能合约
+
+此合约主要作用是处理交易
+
+world status
+key		              value
+用户ID                      用户账户信息
+
+初始化用户addUser有2个参数：用户ID，账户信息
+账户信息以json格式保存：
+{“GOLD”:”5”,
+ “CNY”:”100”，
+ “BTC”:”10”,
+}
+
+POST请求
+Post https://3299e8490b7a4a50ae94819b763a772d-vp0.us.blockchain.ibm.com:5001/chaincode
+{
+  "jsonrpc": "2.0",
+  "method": "invoke",
+  "params": {
+    "type": 1,
+    "chaincodeID": {
+      "name": "733c13715dcb0fbc25885b39f385da226def1e2ef822e3479c009bd6e4ea6bc0c50770c9f4d500abdeb88bf37e225b73d646a48022e2dae5c41b0387a96abfe9"
+    },
+    "ctorMsg": {
+      "function": "addUser",
+      "args": [
+        "用户ID","用户信息"
+      ]
+    },
+    "secureContext": "user_type1_0"
+  },
+  "id": 0
+}
+
+用户充值recharge有3个参数：用户ID，充值资产类型（Gold/CNY/BTC），充值数量
+POST请求
+Post https://3299e8490b7a4a50ae94819b763a772d-vp0.us.blockchain.ibm.com:5001/chaincode
+{
+  "jsonrpc": "2.0",
+  "method": "invoke",
+  "params": {
+    "type": 1,
+    "chaincodeID": {
+      "name": "733c13715dcb0fbc25885b39f385da226def1e2ef822e3479c009bd6e4ea6bc0c50770c9f4d500abdeb88bf37e225b73d646a48022e2dae5c41b0387a96abfe9"
+    },
+    "ctorMsg": {
+      "function": "recharge",
+      "args": [
+        "用户ID","充值资产类型","充值资产数量"
+      ]
+    },
+    "secureContext": "user_type1_0"
+  },
+  "id": 0
+}
+
+清算exchange有6个参数：卖方ID，买方ID，出售资产类型，支付资产类型，出售资产数量，支付资产数量
+POST请求
+Post https://3299e8490b7a4a50ae94819b763a772d-vp0.us.blockchain.ibm.com:5001/chaincode
+{
+  "jsonrpc": "2.0",
+  "method": "invoke",
+  "params": {
+    "type": 1,
+    "chaincodeID": {
+      "name": "733c13715dcb0fbc25885b39f385da226def1e2ef822e3479c009bd6e4ea6bc0c50770c9f4d500abdeb88bf37e225b73d646a48022e2dae5c41b0387a96abfe9"
+    },
+    "ctorMsg": {
+      "function": "exchange",
+      "args": [
+        "卖方ID","买方ID","出售资产类型","支付资产类型","出售资产数量","支付资产数量"
+      ]
+    },
+    "secureContext": "user_type1_0"
+  },
+  "id": 0
+}
+
+query的参数有1个：world status中的key，即用户ID
+POST请求
+Post https://3299e8490b7a4a50ae94819b763a772d-vp0.us.blockchain.ibm.com:5001/chaincode
+{
+  "jsonrpc": "2.0",
+  "method": "query",
+  "params": {
+    "type": 1,
+    "chaincodeID": {
+      "name": "733c13715dcb0fbc25885b39f385da226def1e2ef822e3479c009bd6e4ea6bc0c50770c9f4d500abdeb88bf37e225b73d646a48022e2dae5c41b0387a96abfe9"
+    },
+    "ctorMsg": {
+      "function": "query",
+      "args": [
+        "用户ID"
+      ]
+    },
+    "secureContext": "user_type1_0"
+  },
+  "id": 0
+}
+
+
+
