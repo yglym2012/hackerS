@@ -93,6 +93,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 	}
 	draftID := args[0]
 	SerialNum := args[1]
+	var err error
 
 	var draftInfo draftInfoStruct
 
@@ -113,7 +114,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 	draftInfo.SerialNum = SerialNum
 	draftInfo.Status = "done"
 
-	n, err = json.Marshal(draftInfo)
+	n, err := json.Marshal(draftInfo)
 	if err != nil {
 		return nil, errors.New("Can not translate struct to byte")
 	}
