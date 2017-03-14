@@ -16,9 +16,10 @@ limitations under the License.
 
 package main
 
-//医疗救助对象
+//民政局结算
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	//"strconv"
@@ -29,109 +30,102 @@ import (
 // SimpleChaincode example simple Chaincode implementation
 type SimpleChaincode struct {
 }
+
+type draftInfoStruct struct {
+	Sum         string
+	From        string
+	FromAccount string
+	To          string
+	ToAccount   string
+	Deadline    string
+	SerialNum   string
+	Status      string
+}
+
 //传入一个参数，[0]是操作人ID
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	//var ID string    // operator's ID
-	//var IDval string // ID of the contracts list
-	//var err error
 
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. ")
 	}
 
-	// Initialize the chaincode
-	//ID = args[0]
-	//IDval = args[1]
-
-	
-	//err = stub.PutState(ID, []byte(IDval))
-	//if err != nil {
-	//	return nil, err
-	//}
-
 	return nil, nil
 }
 
-//实现3个功能：add，update（输入参数3个：[0]是医疗救助对象的ID，[1]是hash信息，[2]是操作人ID）；delete（输入参数2个：[0]医疗救助对象ID，[1]操作人员ID）
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	if function == "delete" {
-		return t.delete(stub, args)
-	}else if function == "update"{
-		return t.update(stub,args)
-	}else if function == "add"{
-		return t.add(stub,args)
+	if function == "create" {
+		return t.create(stub, args)
+	} else if function == "transfer" {
+		return t.transfer(stub, args)
 	}
 
 	return nil, errors.New("no such a method on this chaincode")
 }
-//update传入3个参数：医疗救助人员ID，信息Hash，操作人ID
-func (t *SimpleChaincode) update(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+
+//create传入3个参数：数字汇票ID，数字汇票信息，操作人ID
+func (t *SimpleChaincode) create(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 	if len(args) != 3 {
 		return nil, errors.New("Incorrect number of arguments.Expecting 3 ")
 	}
-	NListID := args[0] //需更新的医疗救助人员ID
-	NListIDval := args[1]//需要更新的信息
+	draftID := args[0]
+	draftInfo := args[1]
 	var err error
 
-	// 判断更新的ID是否在链上
-		ListIDvalTemp, errs := stub.GetState(NListID)
-		if errs != nil {
-			return nil, errors.New("list is not here")
-		}
-		if ListIDvalTemp == nil {
-			return nil, errors.New("Entity not found")
-		}
-	//若存在，则进行更新
-		err = stub.PutState(NListID, []byte(NListIDval))
-		if err != nil {
-			return nil, err
-		}
-		return nil, nil
-}
-//add传入3个参数：医疗救助人员ID，信息Hash，操作人ID
-func (t *SimpleChaincode) add(stub shim.ChaincodeStubInterface, args []string) ([]byte, error){
-		if len(args) != 3 {
-			return nil, errors.New("Incorrect number of arguments.Expecting 3 ")
-		}
-		ListID := args[0]   //新增加的医疗救助人员ID
-		ListIDval := args[1]//新增加的医疗救助人员信息
-		var err error
-		// 添加时需要判断ID对应的值是否已经存在，防止重复添加
-        TempHashval, err:= stub.GetState(ListID)
+	// 添加时需要判断ID对应的值是否已经存在，防止重复添加
+	TempHashval, err := stub.GetState(draftID)
+	if TempHashval != nil {
+		return nil, errors.New("This ID already exists")
+	}
 
-        if TempHashval != nil {
-        	return nil, errors.New("This ID already exists")
-        }
-		// Write the state back to the ledger
-		err = stub.PutState(ListID, []byte(ListIDval))
-		if err != nil {
-			return nil, err
-		}
-		return nil, nil
-}
-//delete传入2个参数：医疗救助人员ID，操作人ID
-func (t *SimpleChaincode) delete(stub shim.ChaincodeStubInterface, args []string) ([]byte, error){	
-	
-		if len(args) != 2 {
-			return nil, errors.New("Incorrect number of arguments. Expecting 2")
-		}
-		OListID := args[0] //医疗救助人员ID
-		//ListIDvalTemp, errs := stub.GetState(ListID)
-		//if errs != nil {
-		//	return nil, errors.New("The ID is not existed")
-		//}
-		//if ListIDvalTemp == nil {
-		//	return nil, errors.New("Entity not found")
-		//}
-		err := stub.DelState(OListID)
-		if err != nil {
-			return nil, errors.New("Failed to delete state")
-		}	
-
-		return nil, nil
+	err = stub.PutState(draftID, []byte(draftInfo))
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
 }
 
+//delete传入3个参数：数字汇票ID，银行流水号，操作人ID
+func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+
+	if len(args) != 3 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 3")
+	}
+	draftID := args[0]
+	SerialNum := args[1]
+
+	var draftInfo draftInfoStruct
+
+	draftInfoTemp, errs := stub.GetState(draftID)
+	if errs != nil {
+		return nil, errors.New("The ID is not existed")
+	}
+	if draftInfoTemp == nil {
+		return nil, errors.New("Entity not found")
+	}
+
+	//将byte的结果转换成struct
+	err = json.Unmarshal(draftInfoTemp, &draftInfo)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+
+	draftInfo.SerialNum = SerialNum
+	draftInfo.Status = "done"
+
+	n, err = json.Marshal(draftInfo)
+	if err != nil {
+		return nil, errors.New("Can not translate struct to byte")
+	}
+
+	// Write the state to the ledger
+	err = stub.PutState(draftID, []byte(n))
+	if err != nil {
+		return nil, errors.New("Can not put the new userInfo to the ledger")
+	}
+
+	return nil, nil
+}
 
 // Query callback representing the query of a chaincode,1个参数，[0]医疗救助人员ID
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
