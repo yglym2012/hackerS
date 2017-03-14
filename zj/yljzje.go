@@ -71,7 +71,7 @@ func (t *SimpleChaincode) add(stub shim.ChaincodeStubInterface, args []string) (
 		}
 	} else {
 		var l []string
-		l = byteString(ListIDvalTemp)
+		l = byteString([]byte(ListIDvalTemp))
 		l = append(l, NListIDval)
 		byteContent := "\x00" + strings.Join(l, "\x02\x00")
 		err = stub.PutState(NListID, []byte(byteContent))
