@@ -81,14 +81,13 @@ func (t *SimpleChaincode) add(stub shim.ChaincodeStubInterface, args []string) (
 	}
 	return nil, nil
 }
-
 func byteString(p []byte) string {
-        for i := 0; i < len(p); i++ {
-                if p[i] == 0 {
-                        return string(p[0:i])
-                }
-        }
-        return string(p)
+	for i := 0; i < len(p); i++ {
+		if p[i] == 0 {
+			return string(p[0:i])
+		}
+	}
+	return string(p)
 }
 
 // Query callback representing the query of a chaincode,1个参数，[0]医疗救助人员ID
