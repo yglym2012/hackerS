@@ -22,7 +22,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -64,7 +63,7 @@ func (t *SimpleChaincode) add(stub shim.ChaincodeStubInterface, args []string) (
 	if errs != nil {
 		var infoSlice []string = make([]string, 0, 999999)
 		infoSlice = append(infoSlice, NListIDval)
-		b, _ := Marshal(infoSlice)
+		b, _ := json.Marshal(infoSlice)
 		err = stub.PutState(NListID, []byte(b))
 		if err != nil {
 			return nil, err
@@ -76,7 +75,7 @@ func (t *SimpleChaincode) add(stub shim.ChaincodeStubInterface, args []string) (
 			fmt.Println("error:", err)
 		}
 		tmpSlice = append(tmpSlice, NListIDval)
-		b, _ := Marshal(tmpSlice)
+		b, _ := json.Marshal(tmpSlice)
 		err = stub.PutState(NListID, []byte(b))
 		if err != nil {
 			return nil, err
