@@ -70,9 +70,10 @@ func (t *SimpleChaincode) add(stub shim.ChaincodeStubInterface, args []string) (
 			return nil, err
 		}
 	} else {
-		l := string(ListIDvalTemp)
+		var l string[]
+		l = string(ListIDvalTemp)
 		l = append(l, NListIDval)
-		byteContent := "\x00" + strings.Join(infoSlice, "\x02\x00")
+		byteContent := "\x00" + strings.Join(l, "\x02\x00")
 		err = stub.PutState(NListID, []byte(byteContent))
 		if err != nil {
 			return nil, err
