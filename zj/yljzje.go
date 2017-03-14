@@ -19,10 +19,10 @@ package main
 //医疗救助金额上链
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
-	//"strconv"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -64,17 +64,20 @@ func (t *SimpleChaincode) add(stub shim.ChaincodeStubInterface, args []string) (
 	if errs != nil {
 		var infoSlice []string = make([]string, 0, 999999)
 		infoSlice = append(infoSlice, NListIDval)
-		byteContent := "\x00" + strings.Join(infoSlice, "\x02\x00")
-		err = stub.PutState(NListID, []byte(byteContent))
+		b, _ := Marshal(infoSlice)
+		err = stub.PutState(NListID, []byte(b))
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		var l []string
-		l = byteString([]byte(ListIDvalTemp))
-		l = append(l, NListIDval)
-		byteContent := "\x00" + strings.Join(l, "\x02\x00")
-		err = stub.PutState(NListID, []byte(byteContent))
+		var tmpSlice []string = make([]string, 0, 999999)
+		err = json.Unmarshal(ListIDvalTemp, &tmpSlice)
+		if err != nil {
+			fmt.Println("error:", err)
+		}
+		tmpSlice = append(tmpSlice, NListIDval)
+		b, _ := Marshal(tmpSlice)
+		err = stub.PutState(NListID, []byte(b))
 		if err != nil {
 			return nil, err
 		}
