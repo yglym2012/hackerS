@@ -16,7 +16,7 @@ limitations under the License.
 
 package main
 
-//医疗救助对象
+//医疗救助金额上链
 
 import (
 	"errors"
